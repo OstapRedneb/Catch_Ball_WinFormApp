@@ -9,6 +9,7 @@ namespace Catch_Ball_WinFormApp
 
         private void startButton_Click(object sender, EventArgs e)
         {
+            new SettingsForm().Show();
             Hide();
         }
 
