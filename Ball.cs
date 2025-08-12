@@ -38,8 +38,8 @@ namespace Catch_Ball_WinFormApp
             formBrush = new SolidBrush(ColorTranslator.FromHtml(ColorTranslator.ToHtml(form.BackColor)));
             formPen = new Pen(form.BackColor);
 
-            x = random.Next(0, form.ClientSize.Width - size);
-            y = random.Next(0, form.ClientSize.Height - size);
+            x = random.Next(100, form.ClientSize.Width - size - 100);
+            y = random.Next(100, form.ClientSize.Height - size - 100);
 
             (vx, vy) = CreateVectors();
 
