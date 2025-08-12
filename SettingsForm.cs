@@ -34,7 +34,16 @@ namespace Catch_Ball_WinFormApp
 
         private void beginButton_Click(object sender, EventArgs e)
         {
+            switch (dificultLabel.Text) 
+            {
+                case "Легко": GameForm.difficulty = Difficulty.Easy; break;
+                case "Средне": GameForm.difficulty = Difficulty.Normal; break;
+                case "Сложно": GameForm.difficulty = Difficulty.Hard; break;
+            }
+            GameForm.numberOfBalls = int.Parse(countLabel.Text);
 
+            new GameForm().Show();
+            Hide();
         }
     }
 }

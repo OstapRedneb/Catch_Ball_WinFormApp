@@ -28,7 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            timer = new System.Windows.Forms.Timer(components);
             SuspendLayout();
+            // 
+            // timer
+            // 
+            timer.Tick += timer_Tick;
             // 
             // GameForm
             // 
@@ -37,9 +43,13 @@
             ClientSize = new Size(800, 450);
             Name = "GameForm";
             Text = "Поймай мячики!";
+            Load += GameForm_Load;
+            MouseDown += GameForm_MouseDown;
             ResumeLayout(false);
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer timer;
     }
 }

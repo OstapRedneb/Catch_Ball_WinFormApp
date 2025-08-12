@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -10,72 +11,99 @@ namespace Catch_Ball_WinFormApp
 {
     public class Ball
     {
-        GameForm form;
-        Graphics graphics;
         Random random = new Random();
+
+        GameForm form;
         Timer timer;
 
+        Graphics graphics;
+        Rectangle rectangle;
+        Pen pen;
         Brush brush;
 
-        int size;
+        Brush formBrush;
+        Pen formPen;
 
-        int x;
-        int y;
+        public int size;
+
+        public int x;
+        public int y;
 
         int vx;
         int vy;
 
-        public Ball(GameForm form, int vx, int vy)
+        public Ball(GameForm form, int size, int interval)
         {
-            this.vx = vx;
-            this.vy = vy;
             this.form = form;
+            formBrush = new SolidBrush(ColorTranslator.FromHtml(ColorTranslator.ToHtml(form.BackColor)));
+            formPen = new Pen(form.BackColor);
+
+            x = random.Next(0, form.ClientSize.Width - size);
+            y = random.Next(0, form.ClientSize.Height - size);
+            vx = random.Next(-2, 3);
+            vy = random.Next(-2, 3);
+            this.size = size;
 
             timer = new Timer();
+            timer.Interval = interval;
             timer.Tick += MoveNext;
 
-            switch (random.Next(0, 6)) 
-            {
-                case 0: brush = Brushes.Aqua; break;
-                case 1: brush = Brushes.Yellow; break;
-                case 2: brush = Brushes.Violet; break;
-                case 3: brush = Brushes.Tomato; break;
-                case 4: brush = Brushes.Green; break;
-            }
+            //switch (random.Next(0, 6)) 
+            //{
+            //    case 0: brush = Brushes.Aqua; break;
+            //    case 1: brush = Brushes.Yellow; break;
+            //    case 2: brush = Brushes.Violet; break;
+            //    case 3: brush = Brushes.Tomato; break;
+            //    case 4: brush = Brushes.Green; break;
+            //}
+
+            graphics = form.graphics;
+
+            pen = new Pen(Color.Black);
+            brush = PickBrush();
+            rectangle = new Rectangle(x, y, size, size);
         }
 
         public void Show() 
         {
-            size = random.Next();
-
-            graphics = form.CreateGraphics();
-
-            x = random.Next(0, form.ClientSize.Width - size);
-            y = random.Next(0, form.ClientSize.Height - size);
-
-            graphics.FillEllipse(brush, new Rectangle(x, y, size, size));
-        }
-
-        public void Show(int x, int y) 
-        {
-            graphics = form.CreateGraphics();
-
-            graphics.DrawEllipse(new Pen(Color.Aqua), new Rectangle(x, y, size, size));
+            graphics.DrawEllipse(pen, rectangle with {X = x, Y = y });
+            graphics.FillEllipse(brush, rectangle with { X = x, Y = y });
         }
 
         public void MoveNext(object sender, EventArgs e) 
         {
             Clear();
-            Show(x + vx, y + vy);
+            x += vx;
+            y += vx;
+
+            if (x < -size * 2 || y < -size * 2 || x > form.ClientSize.Width || y > form.ClientSize.Height) 
+            {
+                form.game = Game.Loose;
+            }
+            Show();
         }
         public void Clear() 
         {
-            graphics.Clear(form.BackColor);
+            graphics.DrawEllipse(formPen, rectangle with { X = x, Y = y });
+            graphics.FillEllipse(formBrush, rectangle with { X = x, Y = y });
         }
 
         public void TurnOnOff() 
         {
             timer.Enabled = !timer.Enabled;
+        }
+        public Brush PickBrush()
+        {
+            Brush result = Brushes.Transparent;
+
+            Type brushesType = typeof(Brushes);
+
+            PropertyInfo[] properties = brushesType.GetProperties();
+
+            int rnd = random.Next(properties.Length);
+            result = (Brush)properties[rnd].GetValue(null, null);
+
+            return result;
         }
     }
 }
