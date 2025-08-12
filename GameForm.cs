@@ -118,7 +118,8 @@ namespace Catch_Ball_WinFormApp
         }
         public void Finish() 
         {
-            new MainForm().Show();
+            FinishForm.game = game;
+            new FinishForm().Show();
             Close();
         }
     }
