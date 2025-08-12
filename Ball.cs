@@ -40,8 +40,10 @@ namespace Catch_Ball_WinFormApp
 
             x = random.Next(0, form.ClientSize.Width - size);
             y = random.Next(0, form.ClientSize.Height - size);
-            vx = random.Next(-2, 3);
-            vy = random.Next(-2, 3);
+
+            (vx, vy) = CreateVectors();
+
+            
             this.size = size;
 
             timer = new Timer();
@@ -64,6 +66,20 @@ namespace Catch_Ball_WinFormApp
             rectangle = new Rectangle(x, y, size, size);
         }
 
+        private (int, int) CreateVectors()
+        {
+            int vx1 = 0;
+            int vy1 = 0;
+
+            while (vx1 == 0 && vy1 == 0)
+            {
+                vx1 = random.Next(-2, 3);
+                vy1 = random.Next(-2, 3);
+            }
+
+            return (vx1, vy1);
+        }
+
         public void Show() 
         {
             graphics.DrawEllipse(pen, rectangle with {X = x, Y = y });
@@ -74,7 +90,7 @@ namespace Catch_Ball_WinFormApp
         {
             Clear();
             x += vx;
-            y += vx;
+            y += vy;
 
             if (x < -size * 2 || y < -size * 2 || x > form.ClientSize.Width || y > form.ClientSize.Height) 
             {
