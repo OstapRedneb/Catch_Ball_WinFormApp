@@ -85,7 +85,7 @@ namespace Catch_Ball_WinFormApp
 
             for (int i = 0; i < balls.Count; i++)
             {
-                if ((e.X >= balls[i].x && e.X <= balls[i].x + balls[i].size) && (e.Y >= balls[i].y && e.Y <= balls[i].y + balls[i].size))
+                if (Math.Pow(e.X - balls[i].CenterX, 2) + Math.Pow(e.Y - balls[i].CenterY, 2) <= Math.Pow(balls[i].Radius, 2))
                 {
                     balls[i].TurnOnOff();
                     balls[i].Clear();
