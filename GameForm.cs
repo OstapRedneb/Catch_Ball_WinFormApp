@@ -3,27 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Reflection;
+using BallClassLibrary;
 
 namespace Catch_Ball_WinFormApp
 {
-    public enum Difficulty
-    {
-        Easy,
-        Normal,
-        Hard
-    }
-    public enum Game 
-    {
-        None, 
-        Success,
-        Loose
-    }
     public partial class GameForm : Form
     {
         public static Difficulty difficulty;
@@ -46,6 +37,8 @@ namespace Catch_Ball_WinFormApp
             InitializeComponent();
             BackColor = Color.FromArgb(random.Next(255), random.Next(255), random.Next(255));
             graphics = CreateGraphics();
+            Ball.graphics = graphics;
+            Ball.BallChanged += ChangeStatus;
             timer.Start();
         }
 
@@ -121,6 +114,13 @@ namespace Catch_Ball_WinFormApp
             FinishForm.game = game;
             new FinishForm().Show();
             Close();
+        }
+        public void ChangeStatus(object sender, FormEventArgs e) 
+        {
+            Ball ball = sender as Ball;
+
+            if (ball?.x < - ball?.size * 2 || ball?.y < -ball?.size * 2 || ball?.x > ClientSize.Width || ball?.y > ClientSize.Height)  
+                game = e.status;
         }
     }
 }
